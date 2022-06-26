@@ -3,6 +3,7 @@ package com.danielqueiroz.libraryshop.api.controller
 import com.danielqueiroz.libraryshop.domain.model.Person
 import com.danielqueiroz.libraryshop.domain.service.PersonService
 import org.springframework.http.MediaType
+import org.springframework.http.ResponseEntity
 import org.springframework.web.bind.annotation.*
 
 @RestController
@@ -16,24 +17,25 @@ class PersonController(
         return personService.findById(id)
     }
 
-    @GetMapping
+    @GetMapping(produces = [MediaType.APPLICATION_JSON_VALUE])
     fun getPersons(): List<Person> {
         return personService.findAll()
     }
 
-    @PostMapping(consumes = [MediaType.APPLICATION_JSON_VALUE], produces = [MediaType.APPLICATION_JSON_VALUE])
+    @PostMapping(produces = [MediaType.APPLICATION_JSON_VALUE], consumes = [MediaType.APPLICATION_JSON_VALUE])
     fun createPerson(@RequestBody person: Person): Person {
         return personService.create(person)
     }
 
-    @PutMapping(value = ["/{id}"],consumes = [MediaType.APPLICATION_JSON_VALUE], produces = [MediaType.APPLICATION_JSON_VALUE])
+    @PutMapping(produces = [MediaType.APPLICATION_JSON_VALUE], consumes = [MediaType.APPLICATION_JSON_VALUE])
     fun updatePerson(@RequestBody person: Person): Person {
         return personService.update(person)
     }
 
-    @DeleteMapping(value = ["/{id}"],consumes = [MediaType.APPLICATION_JSON_VALUE], produces = [MediaType.APPLICATION_JSON_VALUE])
-    fun deletePerson(@PathVariable id: Long) {
+    @DeleteMapping("/{id}")
+    fun deletePerson(@PathVariable id: Long): ResponseEntity<*> {
         personService.delete(id)
+        return ResponseEntity.noContent().build<Any>()
     }
 
 }
