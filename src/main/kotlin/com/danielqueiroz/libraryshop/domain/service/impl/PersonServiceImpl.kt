@@ -15,4 +15,20 @@ class PersonServiceImpl : PersonService {
         return Person( 1, "Daniel", "Queiroz")
     }
 
+    override fun findAll(): List<Person> {
+        return listOf(Person(1,"Daniel"), Person(2,"Eren"), Person(3, "Mikasa"))
+    }
+
+    override fun create(person: Person): Person {
+        return person
+    }
+
+    override fun update(person: Person): Person {
+        return person
+    }
+
+    override fun delete(id: Long) {
+        TODO("Not yet implemented")
+    }
+
 }
