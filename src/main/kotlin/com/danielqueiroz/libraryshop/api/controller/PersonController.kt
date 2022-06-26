@@ -1,5 +1,6 @@
 package com.danielqueiroz.libraryshop.api.controller
 
+import com.danielqueiroz.libraryshop.api.data.vo.v1.PersonVO
 import com.danielqueiroz.libraryshop.domain.model.Person
 import com.danielqueiroz.libraryshop.domain.service.PersonService
 import org.springframework.http.MediaType
@@ -13,22 +14,22 @@ class PersonController(
 ) {
 
     @GetMapping("/{id}", produces = [MediaType.APPLICATION_JSON_VALUE])
-    fun getPerson(@PathVariable id: Long): Person {
+    fun getPerson(@PathVariable id: Long): PersonVO {
         return personService.findById(id)
     }
 
     @GetMapping(produces = [MediaType.APPLICATION_JSON_VALUE])
-    fun getPersons(): List<Person> {
+    fun getPersons(): List<PersonVO> {
         return personService.findAll()
     }
 
     @PostMapping(produces = [MediaType.APPLICATION_JSON_VALUE], consumes = [MediaType.APPLICATION_JSON_VALUE])
-    fun createPerson(@RequestBody person: Person): Person {
+    fun createPerson(@RequestBody person: PersonVO): PersonVO {
         return personService.create(person)
     }
 
     @PutMapping(produces = [MediaType.APPLICATION_JSON_VALUE], consumes = [MediaType.APPLICATION_JSON_VALUE])
-    fun updatePerson(@RequestBody person: Person): Person {
+    fun updatePerson(@RequestBody person: PersonVO): PersonVO {
         return personService.update(person)
     }
 

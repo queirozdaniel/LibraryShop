@@ -1,6 +1,6 @@
 package com.danielqueiroz.libraryshop.api.exception.handler
 
-import com.danielqueiroz.libraryshop.api.dto.exception.ExceptionResponse
+import com.danielqueiroz.libraryshop.api.data.vo.exception.ExceptionResponse
 import com.danielqueiroz.libraryshop.api.exception.ResourceNotFoundException
 import org.springframework.http.HttpStatus
 import org.springframework.http.ResponseEntity

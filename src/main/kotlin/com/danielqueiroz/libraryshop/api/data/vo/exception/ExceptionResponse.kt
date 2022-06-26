@@ -1,4 +1,4 @@
-package com.danielqueiroz.libraryshop.api.dto.exception
+package com.danielqueiroz.libraryshop.api.data.vo.exception
 
 import java.time.LocalDateTime
 
