@@ -46,9 +46,9 @@ class PersonServiceImpl(
     }
 
     override fun update(person: PersonVO): PersonVO {
-        logger.info("Update infos for person with id[${person.id}]")
-        val entity = repository.findById(person.id!!).orElseThrow {
-            ResourceNotFoundException("No records found for this id: ${person.id}")
+        logger.info("Update infos for person with id[${person.idValue}]")
+        val entity = repository.findById(person.idValue!!).orElseThrow {
+            ResourceNotFoundException("No records found for this id: ${person.idValue}")
         }
 
         entity.firstName = person.firstName
