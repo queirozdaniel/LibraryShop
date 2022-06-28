@@ -1,5 +1,6 @@
 package com.danielqueiroz.libraryshop.domain.service.impl
 
+import com.danielqueiroz.libraryshop.api.controller.PersonController
 import com.danielqueiroz.libraryshop.api.data.vo.v1.PersonVO
 import com.danielqueiroz.libraryshop.api.data.vo.v2.PersonVO as PersonVOV2
 import com.danielqueiroz.libraryshop.api.exception.ResourceNotFoundException
@@ -8,6 +9,7 @@ import com.danielqueiroz.libraryshop.api.mapper.custom.PersonMapper
 import com.danielqueiroz.libraryshop.domain.model.Person
 import com.danielqueiroz.libraryshop.domain.repository.PersonRepository
 import com.danielqueiroz.libraryshop.domain.service.PersonService
+import org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.linkTo
 import org.springframework.stereotype.Service
 import java.util.logging.Logger
 
@@ -24,19 +26,31 @@ class PersonServiceImpl(
         val person = repository.findById(id).orElseThrow {
             ResourceNotFoundException("No records found for this id: $id")
         }
-        return DozerMapper.parseObject(person, PersonVO::class.java)
+        val personVO = DozerMapper.parseObject(person, PersonVO::class.java)
+
+        val withSelfRel = linkTo(PersonController::class.java).slash(personVO.idValue).withSelfRel()
+        personVO.add(withSelfRel)
+
+        return personVO
     }
 
     override fun findAll(): List<PersonVO> {
         logger.info("Finding all persons")
         val persons = repository.findAll()
-        return DozerMapper.parseListObjects(persons, PersonVO::class.java)
+        val vos = DozerMapper.parseListObjects(persons, PersonVO::class.java)
+        vos.forEach { it.add(linkTo(PersonController::class.java).slash(it.idValue).withSelfRel()) }
+        return vos
     }
 
     override fun create(person: PersonVO): PersonVO {
         logger.info("Create a person with name ${person.firstName} ${person.lastName}")
         val entity = DozerMapper.parseObject(person, Person::class.java)
-        return DozerMapper.parseObject(repository.save(entity), PersonVO::class.java)
+        val personVO =  DozerMapper.parseObject(repository.save(entity), PersonVO::class.java)
+
+        val withSelfRel = linkTo(PersonController::class.java).slash(personVO.idValue).withSelfRel()
+        personVO.add(withSelfRel)
+
+        return personVO
     }
 
     override fun createV2(person: PersonVOV2): PersonVOV2 {
@@ -56,7 +70,12 @@ class PersonServiceImpl(
         entity.address = person.address
         entity.gender = person.gender
 
-        return DozerMapper.parseObject(repository.save(entity), PersonVO::class.java)
+        val personVO =  DozerMapper.parseObject(repository.save(entity), PersonVO::class.java)
+
+        val withSelfRel = linkTo(PersonController::class.java).slash(personVO.idValue).withSelfRel()
+        personVO.add(withSelfRel)
+
+        return personVO
     }
 
     override fun delete(id: Long) {
