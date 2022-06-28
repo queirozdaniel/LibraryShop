@@ -9,15 +9,19 @@ import com.danielqueiroz.libraryshop.api.mapper.custom.PersonMapper
 import com.danielqueiroz.libraryshop.domain.model.Person
 import com.danielqueiroz.libraryshop.domain.repository.PersonRepository
 import com.danielqueiroz.libraryshop.domain.service.PersonService
+import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.linkTo
 import org.springframework.stereotype.Service
 import java.util.logging.Logger
 
 @Service
-class PersonServiceImpl(
-    private val repository: PersonRepository,
-    private val mapperV2: PersonMapper
-) : PersonService {
+class PersonServiceImpl : PersonService {
+
+    @Autowired
+    private lateinit var repository: PersonRepository
+
+    @Autowired
+    private lateinit var mapperV2: PersonMapper
 
     private val logger = Logger.getLogger(PersonServiceImpl::class.java.name)
 
