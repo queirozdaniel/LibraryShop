@@ -1,15 +1,15 @@
 package com.danielqueiroz.libraryshop.mockito.domain.service
 
+import com.danielqueiroz.libraryshop.api.exception.ResourceNotFoundException
 import com.danielqueiroz.libraryshop.domain.model.Person
 import com.danielqueiroz.libraryshop.domain.repository.PersonRepository
 import com.danielqueiroz.libraryshop.domain.service.impl.PersonServiceImpl
 import com.danielqueiroz.libraryshop.unittests.mapper.mocks.MockPerson
+import org.junit.jupiter.api.Assertions.*
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
+import org.junit.jupiter.api.assertThrows
 
-import org.junit.jupiter.api.Assertions.assertEquals
-import org.junit.jupiter.api.Assertions.assertTrue
-import org.junit.jupiter.api.Assertions.assertNotNull
 import org.junit.jupiter.api.extension.ExtendWith
 import org.mockito.InjectMocks
 import org.mockito.Mock
@@ -53,6 +53,18 @@ internal class PersonServiceTest {
         assertEquals(person.lastName, result.lastName)
         assertEquals(person.address, result.address)
         assertEquals(person.gender, result.gender)
+    }
+
+    @Test
+    fun `must return not found status when person is not found`() {
+        val id: Long = 0
+        val expection = assertThrows(
+            ResourceNotFoundException::class.java
+        ) {
+            service.findById(id)
+        }
+        val message = "No records found for this id: $id"
+        assertEquals(message, expection.message)
     }
 
     @Test
