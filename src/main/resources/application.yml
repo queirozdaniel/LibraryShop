@@ -7,3 +7,9 @@ spring:
     hibernate:
       ddl-auto: none
     show-sql: false
+spring-doc:
+  paths-to-match:
+    - /api/**/v1/**
+    - /api/**/v2/**
+  swagger-ui:
+    use-root-path: true
