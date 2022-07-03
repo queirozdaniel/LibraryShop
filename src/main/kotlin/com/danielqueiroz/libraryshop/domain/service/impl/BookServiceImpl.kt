@@ -9,6 +9,7 @@ import com.danielqueiroz.libraryshop.domain.service.BookService
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.hateoas.server.mvc.WebMvcLinkBuilder
 import org.springframework.stereotype.Service
+import org.springframework.transaction.annotation.Transactional
 
 @Service
 class BookServiceImpl : BookService {
@@ -33,6 +34,21 @@ class BookServiceImpl : BookService {
         val vos = DozerMapper.parseListObjects(books, BookVO::class.java)
         vos.forEach { it.add(WebMvcLinkBuilder.linkTo(BookController::class.java).slash(it.key).withSelfRel()) }
         return vos
+    }
+
+    @Transactional
+    override fun create(book: BookVO): BookVO {
+        TODO("Not yet implemented")
+    }
+
+    @Transactional
+    override fun update(book: BookVO?): BookVO {
+        TODO("Not yet implemented")
+    }
+
+    @Transactional
+    override fun delete(id: Long) {
+        TODO("Not yet implemented")
     }
 
 }

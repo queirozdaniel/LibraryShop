@@ -1,5 +1,6 @@
 package com.danielqueiroz.libraryshop.mockito.domain.service
 
+import com.danielqueiroz.libraryshop.api.exception.RequiredObjectIsNullException
 import com.danielqueiroz.libraryshop.domain.model.Book
 import com.danielqueiroz.libraryshop.domain.repository.BookRepository
 import com.danielqueiroz.libraryshop.domain.service.impl.BookServiceImpl
@@ -85,6 +86,52 @@ class BookServicesTest {
         assertEquals(book.author, result.author)
         assertEquals(book.title, result.title)
         assertEquals(book.price, result.price)
+    }
+
+    @Test
+    fun `update book information`() {
+        val id: Long = 1
+        val entity = input!!.mockEntity(id.toInt())
+        entity.id = id
+
+        val persisted = entity.copy()
+        persisted.id = id
+
+        val vo = input!!.mockVO(id.toInt())
+        vo.key = id
+
+        `when`(repository.findById(id)).thenReturn(Optional.of(entity))
+
+        `when`(repository.save(entity)).thenReturn(persisted)
+
+        val result = service.update(vo)
+        assertNotNull(result)
+        assertNotNull(result.key)
+        assertNotNull(result.links)
+        assertTrue(result.links.toString().contains("/api/book/v1/$id"))
+        assertEquals(entity.author, result.author)
+        assertEquals(entity.title, result.title)
+        assertEquals(entity.price, result.price)
+    }
+
+    @Test
+    fun `return error when try to update with null book`() {
+        val exception: Exception = assertThrows(
+            RequiredObjectIsNullException::class.java
+        ) { service.update(null) }
+
+        val expectedMessage = "It is not allowed to persist a null object!"
+        val actualMessage = exception.message
+        assertTrue(actualMessage!!.contains(expectedMessage))
+    }
+
+    @Test
+    fun `delete book by id`() {
+        val id: Long = 1
+        val book = input!!.mockEntity(id.toInt())
+        book.id = id
+        `when`(repository.findById(id)).thenReturn(Optional.of(book))
+        service.delete(id)
     }
 
 }
