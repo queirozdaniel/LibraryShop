@@ -2,6 +2,7 @@ package com.danielqueiroz.libraryshop.api.controller
 
 import com.danielqueiroz.libraryshop.api.config.util.MediaType
 import com.danielqueiroz.libraryshop.api.data.vo.v1.BookVO
+import com.danielqueiroz.libraryshop.api.openapi.BookControllerOpenAPI
 import com.danielqueiroz.libraryshop.domain.service.BookService
 import org.springframework.http.ResponseEntity
 import org.springframework.web.bind.annotation.DeleteMapping
@@ -17,33 +18,33 @@ import org.springframework.web.bind.annotation.RestController
 @RequestMapping("/api/books/v1")
 class BookController(
     private val service: BookService
-) {
+) : BookControllerOpenAPI {
 
     @GetMapping("/{id}", produces = [MediaType.APPLICATION_JSON, MediaType.APPLICATION_XML, MediaType.APPLICATION_YAML])
-    fun getBookById(@PathVariable id: Long): BookVO{
+    override fun getBookById(@PathVariable id: Long): BookVO{
         return service.findById(id)
     }
 
     @GetMapping(produces = [MediaType.APPLICATION_JSON,MediaType.APPLICATION_XML, MediaType.APPLICATION_YAML])
-    fun getAllBooks(): List<BookVO> {
+    override fun getAllBooks(): List<BookVO> {
         return service.findAll()
     }
 
     @PostMapping(consumes = [MediaType.APPLICATION_JSON,MediaType.APPLICATION_XML, MediaType.APPLICATION_YAML],
         produces = [MediaType.APPLICATION_JSON,MediaType.APPLICATION_XML, MediaType.APPLICATION_YAML])
-    fun createBook(@RequestBody bookVO: BookVO): BookVO{
+    override fun createBook(@RequestBody bookVO: BookVO): BookVO{
         return service.create(bookVO)
     }
 
     @PutMapping("/{id}",consumes = [MediaType.APPLICATION_JSON,MediaType.APPLICATION_XML, MediaType.APPLICATION_YAML],
         produces = [MediaType.APPLICATION_JSON,MediaType.APPLICATION_XML, MediaType.APPLICATION_YAML])
-    fun updateBook(@RequestBody bookVO: BookVO, @PathVariable id: Long): BookVO{
+    override fun updateBook(@RequestBody bookVO: BookVO, @PathVariable id: Long): BookVO{
         bookVO.key = id
         return service.update(bookVO)
     }
 
     @DeleteMapping("/{id}")
-    fun deleteBook(@PathVariable id: Long) : ResponseEntity<*> {
+    override fun deleteBook(@PathVariable id: Long) : ResponseEntity<*> {
         service.delete(id)
         return ResponseEntity.noContent().build<Any>()
     }
