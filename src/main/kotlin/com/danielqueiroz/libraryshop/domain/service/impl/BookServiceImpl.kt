@@ -1,9 +1,12 @@
 package com.danielqueiroz.libraryshop.domain.service.impl
 
 import com.danielqueiroz.libraryshop.api.controller.BookController
+import com.danielqueiroz.libraryshop.api.controller.PersonController
 import com.danielqueiroz.libraryshop.api.data.vo.v1.BookVO
+import com.danielqueiroz.libraryshop.api.exception.RequiredObjectIsNullException
 import com.danielqueiroz.libraryshop.api.exception.ResourceNotFoundException
 import com.danielqueiroz.libraryshop.api.mapper.DozerMapper
+import com.danielqueiroz.libraryshop.domain.model.Book
 import com.danielqueiroz.libraryshop.domain.repository.BookRepository
 import com.danielqueiroz.libraryshop.domain.service.BookService
 import org.springframework.beans.factory.annotation.Autowired
@@ -38,17 +41,42 @@ class BookServiceImpl : BookService {
 
     @Transactional
     override fun create(book: BookVO): BookVO {
-        TODO("Not yet implemented")
+        val entity = DozerMapper.parseObject(book, Book::class.java)
+        val bookVO =  DozerMapper.parseObject(repository.save(entity), BookVO::class.java)
+
+        val withSelfRel = WebMvcLinkBuilder.linkTo(PersonController::class.java).slash(bookVO.key).withSelfRel()
+        bookVO.add(withSelfRel)
+
+        return bookVO
     }
 
     @Transactional
     override fun update(book: BookVO?): BookVO {
-        TODO("Not yet implemented")
+        if (book == null) throw RequiredObjectIsNullException()
+
+        val entity = repository.findById(book.key).orElseThrow {
+            ResourceNotFoundException("No records found for this id: ${book.key}")
+        }
+
+        entity.author = book.author
+        entity.title = book.title
+        entity.price = book.price
+        entity.launchDate = book.launchDate
+
+        val bookVO =  DozerMapper.parseObject(repository.save(entity), BookVO::class.java)
+
+        val withSelfRel = WebMvcLinkBuilder.linkTo(BookController::class.java).slash(bookVO.key).withSelfRel()
+        bookVO.add(withSelfRel)
+
+        return bookVO
     }
 
     @Transactional
     override fun delete(id: Long) {
-        TODO("Not yet implemented")
+        val entity = repository.findById(id).orElseThrow {
+            ResourceNotFoundException("No records found for this id: $id")
+        }
+        repository.delete(entity)
     }
 
 }

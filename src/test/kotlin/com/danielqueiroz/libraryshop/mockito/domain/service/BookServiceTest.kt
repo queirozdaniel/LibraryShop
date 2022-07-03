@@ -108,7 +108,7 @@ class BookServicesTest {
         assertNotNull(result)
         assertNotNull(result.key)
         assertNotNull(result.links)
-        assertTrue(result.links.toString().contains("/api/book/v1/$id"))
+        assertTrue(result.links.toString().contains("/api/books/v1/$id"))
         assertEquals(entity.author, result.author)
         assertEquals(entity.title, result.title)
         assertEquals(entity.price, result.price)
