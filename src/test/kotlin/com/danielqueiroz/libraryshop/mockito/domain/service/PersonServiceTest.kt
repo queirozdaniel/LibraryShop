@@ -8,7 +8,6 @@ import com.danielqueiroz.libraryshop.unittests.mapper.mocks.MockPerson
 import org.junit.jupiter.api.Assertions.*
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
-import org.junit.jupiter.api.assertThrows
 
 import org.junit.jupiter.api.extension.ExtendWith
 import org.mockito.InjectMocks
