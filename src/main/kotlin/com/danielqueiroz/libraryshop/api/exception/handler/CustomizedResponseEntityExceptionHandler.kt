@@ -1,6 +1,7 @@
 package com.danielqueiroz.libraryshop.api.exception.handler
 
 import com.danielqueiroz.libraryshop.api.data.vo.exception.ExceptionResponse
+import com.danielqueiroz.libraryshop.api.exception.InvalidJwtAuthenticationException
 import com.danielqueiroz.libraryshop.api.exception.RequiredObjectIsNullException
 import com.danielqueiroz.libraryshop.api.exception.ResourceNotFoundException
 import org.springframework.http.HttpStatus
@@ -33,6 +34,13 @@ class CustomizedResponseEntityExceptionHandler {
         return ResponseEntity<ExceptionResponse>(
             ExceptionResponse(LocalDateTime.now(), ex.message, request.getDescription(false)),
             HttpStatus.BAD_REQUEST
+        )
+    }
+    @ExceptionHandler(InvalidJwtAuthenticationException::class)
+    fun handleInvalidJwtAuthenticationException(ex: Exception, request: WebRequest): ResponseEntity<ExceptionResponse> {
+        return ResponseEntity<ExceptionResponse>(
+            ExceptionResponse(LocalDateTime.now(), ex.message, request.getDescription(false)),
+            HttpStatus.FORBIDDEN
         )
     }
 
