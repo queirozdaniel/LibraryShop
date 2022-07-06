@@ -12,9 +12,6 @@ class User : UserDetails {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     var id: Long? = null
 
-    @Column(name = "description", nullable = true)
-    var description: String? = ""
-
     @Column(name = "user_name", unique = true)
     var userName: String? = null
 
@@ -30,7 +27,7 @@ class User : UserDetails {
     @Column(name = "account_non_locked")
     var accountNonLocked: Boolean? = null
 
-    @Column(name = "credentials_non_locked")
+    @Column(name = "credentials_non_expired")
     var credentialsNonExpired: Boolean? = null
 
     @Column(name = "enabled")
