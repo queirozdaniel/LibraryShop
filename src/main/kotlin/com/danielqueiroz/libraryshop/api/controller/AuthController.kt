@@ -23,7 +23,7 @@ class AuthController : AuthControllerOpenAPI {
     }
 
     @PutMapping(value = ["/refresh/{username}"])
-    fun refreshToken(@PathVariable username: String,
+    override fun refreshToken(@PathVariable username: String,
                      @RequestHeader("Authorization") refreshToken: String): ResponseEntity<*> {
         return if (refreshToken.isNullOrBlank() || username.isNullOrBlank())
             return ResponseEntity.status(HttpStatus.FORBIDDEN).body("Invalid Client Request")
