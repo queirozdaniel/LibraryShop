@@ -1,6 +1,7 @@
 package com.danielqueiroz.libraryshop.integration.controller.withjson
 
 import com.danielqueiroz.libraryshop.ConfigsTest
+import com.danielqueiroz.libraryshop.api.data.vo.exception.ExceptionResponse
 import com.danielqueiroz.libraryshop.integration.testcontainers.AbstractIntegrationTest
 import com.danielqueiroz.libraryshop.integration.vo.AccountCredentialsVO
 import com.danielqueiroz.libraryshop.integration.vo.TokenVO
@@ -70,5 +71,28 @@ class AuthControllerJsonTest : AbstractIntegrationTest() {
         Assertions.assertNotNull(tokenVO.refreshToken)
     }
 
+    @Test
+    fun `login with invalid user`() {
+        val user = AccountCredentialsVO(
+            username = "daniqz",
+            password = "1231222"
+        )
+
+        val response = RestAssured.given()
+            .basePath("/auth/signin")
+            .port(ConfigsTest.SERVER_PORT)
+            .contentType(ConfigsTest.CONTENT_TYPE_JSON)
+            .body(user)
+            .`when`()
+            .post()
+            .then()
+            .statusCode(403)
+            .extract()
+            .body()
+            .`as`(ExceptionResponse::class.java)
+
+        Assertions.assertNotNull(response.message)
+        Assertions.assertEquals("Invalid username or password",response.message)
+    }
 
 }
