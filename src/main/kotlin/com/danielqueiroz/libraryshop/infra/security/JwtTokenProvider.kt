@@ -10,7 +10,6 @@ import jakarta.annotation.PostConstruct
 import jakarta.servlet.http.HttpServletRequest
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.beans.factory.annotation.Value
-import org.springframework.boot.autoconfigure.security.oauth2.resource.OAuth2ResourceServerProperties
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken
 import org.springframework.security.core.Authentication
 import org.springframework.security.core.userdetails.UserDetails
@@ -110,12 +109,13 @@ class JwtTokenProvider {
     }
 
     fun validateToken(token: String) : Boolean{
-        val decodedJWT = decodeToken(token)
         try {
-            if (decodedJWT.expiresAt.before(Date())) false
+            val decodedJWT = decodeToken(token)
+
+            if (decodedJWT.expiresAt.before(Date())) return false
             return true
-        } catch (e: Exception) {
-            throw  InvalidJwtAuthenticationException("Expired or Invalid JWT Token!")
+        } catch (ex: Exception) {
+            throw InvalidJwtAuthenticationException("Invalid or expired token!")
         }
     }
 

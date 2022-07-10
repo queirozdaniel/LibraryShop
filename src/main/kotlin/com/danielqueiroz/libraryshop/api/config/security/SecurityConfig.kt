@@ -29,6 +29,9 @@ class SecurityConfig : WebSecurityConfigurerAdapter() {
     }
 
     @Bean
+    fun tokenProvider() = JwtTokenProvider()
+
+    @Bean
     override fun authenticationManagerBean(): AuthenticationManager = super.authenticationManagerBean()
 
     override fun configure(http: HttpSecurity) {
