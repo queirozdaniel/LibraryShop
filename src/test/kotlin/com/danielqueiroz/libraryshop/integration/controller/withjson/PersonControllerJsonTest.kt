@@ -121,6 +121,32 @@ class PersonControllerJsonTest : AbstractIntegrationTest() {
         assertEquals("Ackerman - Humanity's Strongest Soldier", updatedPerson.lastName)
     }
 
+    @Test
+    @Order(3)
+    fun `find person by id`() {
+
+        val content = given()
+            .spec(specification)
+            .contentType(ConfigsTest.CONTENT_TYPE_JSON)
+            .pathParam("id",person.id)
+            .`when`()
+            .get("{id}")
+            .then().statusCode(200)
+            .extract()
+            .body()
+            .asString()
+
+        val returnedPerson = objectMapper.readValue(content, PersonVO::class.java)
+
+        assertNotNull(returnedPerson.id)
+        assertNotNull(returnedPerson.firstName)
+        assertNotNull(returnedPerson.lastName)
+        assertNotNull(returnedPerson.address)
+        assertNotNull(returnedPerson.gender)
+        assertEquals(returnedPerson.id, person.id)
+        assertEquals("Ackerman - Humanity's Strongest Soldier", returnedPerson.lastName)
+    }
+
     private fun mockPerson() {
         person.firstName = "Levi"
         person.lastName = "Ackerman"
