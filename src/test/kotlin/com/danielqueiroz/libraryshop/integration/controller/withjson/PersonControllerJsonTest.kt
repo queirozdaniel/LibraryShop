@@ -91,6 +91,34 @@ class PersonControllerJsonTest : AbstractIntegrationTest() {
         assertEquals("Levi", createdPerson.firstName)
     }
 
+    @Test
+    @Order(2)
+    fun `update  person info`() {
+
+        person.lastName = "Ackerman - Humanity's Strongest Soldier"
+
+        val content = given()
+            .spec(specification)
+            .contentType(ConfigsTest.CONTENT_TYPE_JSON)
+            .body(person)
+            .`when`()
+            .put()
+            .then().statusCode(200)
+            .extract()
+            .body()
+            .asString()
+
+        val updatedPerson = objectMapper.readValue(content, PersonVO::class.java)
+
+        assertNotNull(updatedPerson.id)
+        assertNotNull(updatedPerson.firstName)
+        assertNotNull(updatedPerson.lastName)
+        assertNotNull(updatedPerson.address)
+        assertNotNull(updatedPerson.gender)
+        assertEquals(updatedPerson.id, person.id)
+        assertEquals("Ackerman - Humanity's Strongest Soldier", updatedPerson.lastName)
+    }
+
     private fun mockPerson() {
         person.firstName = "Levi"
         person.lastName = "Ackerman"
