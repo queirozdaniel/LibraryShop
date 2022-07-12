@@ -147,6 +147,19 @@ class PersonControllerJsonTest : AbstractIntegrationTest() {
         assertEquals("Ackerman - Humanity's Strongest Soldier", returnedPerson.lastName)
     }
 
+    @Test
+    @Order(4)
+    fun `delete person by id`() {
+
+        given()
+            .spec(specification)
+            .pathParam("id",person.id)
+            .`when`()
+            .delete("{id}")
+            .then().statusCode(204)
+
+    }
+
     private fun mockPerson() {
         person.firstName = "Levi"
         person.lastName = "Ackerman"
