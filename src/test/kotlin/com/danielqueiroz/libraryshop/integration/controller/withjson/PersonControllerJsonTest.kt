@@ -81,6 +81,7 @@ class PersonControllerJsonTest : AbstractIntegrationTest() {
             .asString()
 
         val createdPerson = objectMapper.readValue(content, PersonVO::class.java)
+        person = createdPerson
 
         assertNotNull(createdPerson.id)
         assertNotNull(createdPerson.firstName)
@@ -101,8 +102,9 @@ class PersonControllerJsonTest : AbstractIntegrationTest() {
             .spec(specification)
             .contentType(ConfigsTest.CONTENT_TYPE_JSON)
             .body(person)
+            .pathParam("id", person.id)
             .`when`()
-            .put()
+            .put("{id}")
             .then().statusCode(200)
             .extract()
             .body()
