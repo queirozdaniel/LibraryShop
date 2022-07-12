@@ -187,6 +187,25 @@ class PersonControllerJsonTest : AbstractIntegrationTest() {
         assertEquals("Queiroz da Silva", firstPerson.lastName)
     }
 
+    @Test
+    @Order(6)
+    fun `find all people without token`() {
+        val specificationWithoutToken = RequestSpecBuilder()
+            .setBasePath("/api/persons/v1")
+            .setPort(ConfigsTest.SERVER_PORT)
+            .addFilter(RequestLoggingFilter(LogDetail.ALL))
+            .addFilter(ResponseLoggingFilter(LogDetail.ALL))
+            .build()
+
+        given()
+            .spec(specificationWithoutToken)
+            .contentType(ConfigsTest.CONTENT_TYPE_JSON)
+            .`when`()
+            .get()
+            .then().statusCode(403)
+
+    }
+
     private fun mockPerson() {
         person.firstName = "Levi"
         person.lastName = "Ackerman"
