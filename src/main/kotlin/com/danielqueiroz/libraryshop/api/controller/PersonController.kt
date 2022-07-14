@@ -40,6 +40,12 @@ class PersonController(
         return personService.update(person)
     }
 
+
+    @PatchMapping("/v1/{id}")
+    fun disablePerson(@PathVariable id: Long): PersonVO {
+        return personService.disablePerson(id)
+    }
+
     @DeleteMapping("/v1/{id}")
     override fun deletePerson(@PathVariable id: Long): ResponseEntity<*> {
         personService.delete(id)

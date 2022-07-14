@@ -20,7 +20,10 @@ data class Person(
     @Column(name = "last_name", nullable = false, length = 80)
     var lastName: String = "",
     var address: String = "",
-    var gender: String = ""
+    var gender: String = "",
+    @Column(nullable = false)
+    var enabled: Boolean = true
+
 ) {
     override fun equals(other: Any?): Boolean {
         if (this === other) return true

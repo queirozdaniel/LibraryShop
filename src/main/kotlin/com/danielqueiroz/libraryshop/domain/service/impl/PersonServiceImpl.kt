@@ -12,6 +12,7 @@ import com.danielqueiroz.libraryshop.domain.service.PersonService
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.linkTo
 import org.springframework.stereotype.Service
+import org.springframework.transaction.annotation.Transactional
 import java.util.logging.Logger
 
 @Service
@@ -75,6 +76,23 @@ class PersonServiceImpl : PersonService {
         entity.gender = person.gender
 
         val personVO =  DozerMapper.parseObject(repository.save(entity), PersonVO::class.java)
+
+        val withSelfRel = linkTo(PersonController::class.java).slash(personVO.idValue).withSelfRel()
+        personVO.add(withSelfRel)
+
+        return personVO
+    }
+
+    @Transactional
+    override fun disablePerson(id: Long): PersonVO {
+        logger.info("Disabling person with id[$id]")
+
+        val person = repository.findById(id).orElseThrow {
+            ResourceNotFoundException("No records found for this id: $id")
+        }
+        repository.disablePerson(id)
+
+        val personVO = DozerMapper.parseObject(person, PersonVO::class.java)
 
         val withSelfRel = linkTo(PersonController::class.java).slash(personVO.idValue).withSelfRel()
         personVO.add(withSelfRel)

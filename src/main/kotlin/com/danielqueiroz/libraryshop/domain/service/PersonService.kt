@@ -10,5 +10,6 @@ interface PersonService {
     fun create(person: PersonVO): PersonVO
     fun createV2(person: PersonVOV2): PersonVOV2
     fun update(person: PersonVO): PersonVO
+    fun disablePerson(id: Long): PersonVO
     fun delete(id: Long)
 }
