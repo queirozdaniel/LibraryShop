@@ -42,7 +42,7 @@ class PersonController(
 
 
     @PatchMapping("/v1/{id}")
-    fun disablePerson(@PathVariable id: Long): PersonVO {
+    override fun disablePerson(@PathVariable id: Long): PersonVO {
         return personService.disablePerson(id)
     }
 

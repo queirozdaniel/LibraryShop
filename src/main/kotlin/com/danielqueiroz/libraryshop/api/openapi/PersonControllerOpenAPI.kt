@@ -136,6 +136,26 @@ interface PersonControllerOpenAPI {
     fun updatePerson(@RequestBody person: PersonVO, @PathVariable id: Long): PersonVO
 
     @Operation(
+        summary = "Disable person by id", description = "Disable person by id",
+        tags = ["People"],
+        responses = [
+            ApiResponse(description = "Success", responseCode = "200",content = [
+                Content(schema = Schema(implementation = PersonVO::class))
+            ]),
+            ApiResponse(description = "Bad Request", responseCode = "400", content = [
+                Content(schema = Schema(implementation = ExceptionResponse::class))
+            ]),
+            ApiResponse(description = "Unauthorized", responseCode = "401", content = [
+                Content(schema = Schema(implementation = ExceptionResponse::class))
+            ]),
+            ApiResponse(description = "Not Found", responseCode = "404",content = [
+                Content(schema = Schema(implementation = ExceptionResponse::class))
+            ]),
+        ]
+    )
+    fun disablePerson(@PathVariable id: Long): PersonVO
+
+    @Operation(
         summary = "Deletes a Person", description = "Deletes a Person",
         tags = ["People"],
         responses = [
