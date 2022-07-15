@@ -8,6 +8,7 @@ import com.danielqueiroz.libraryshop.domain.service.PersonService
 import org.springframework.data.domain.Page
 import org.springframework.data.domain.PageRequest
 import org.springframework.data.domain.Pageable
+import org.springframework.data.domain.Sort
 import org.springframework.http.ResponseEntity
 import org.springframework.web.bind.annotation.*
 
@@ -24,9 +25,11 @@ class PersonController(
 
     @GetMapping("/v1",produces = [MediaType.APPLICATION_JSON,MediaType.APPLICATION_XML, MediaType.APPLICATION_YAML])
     override fun getPersons(@RequestParam(value = "page", defaultValue = "0") page: Int,
-                            @RequestParam(value = "limit", defaultValue = "12") limit: Int): ResponseEntity<Page<PersonVO>> {
+                            @RequestParam(value = "limit", defaultValue = "12") limit: Int,
+                            @RequestParam(value = "direction", defaultValue = "asc") direction: String): ResponseEntity<Page<PersonVO>> {
 
-        val pageable: Pageable = PageRequest.of(page, limit)
+        val sortDirection: Sort.Direction = if ("desc".equals(direction, ignoreCase = true)) Sort.Direction.DESC else Sort.Direction.ASC
+        val pageable: Pageable = PageRequest.of(page, limit, Sort.by(sortDirection, "firstName"))
         return ResponseEntity.ok(personService.findAll(pageable))
     }
 

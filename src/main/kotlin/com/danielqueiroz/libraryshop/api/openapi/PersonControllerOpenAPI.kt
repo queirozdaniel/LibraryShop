@@ -75,7 +75,8 @@ interface PersonControllerOpenAPI {
         ]
     )
     fun getPersons(@RequestParam(value = "page", defaultValue = "0") page: Int,
-                   @RequestParam(value = "limit", defaultValue = "12") limit: Int
+                   @RequestParam(value = "limit", defaultValue = "12") limit: Int,
+                   @RequestParam(value = "direction", defaultValue = "asc") direction: String
                    ): ResponseEntity<Page<PersonVO>>
 
     @Operation(
