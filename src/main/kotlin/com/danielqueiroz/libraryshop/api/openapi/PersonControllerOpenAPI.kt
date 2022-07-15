@@ -8,6 +8,7 @@ import io.swagger.v3.oas.annotations.media.Content
 import io.swagger.v3.oas.annotations.media.Schema
 import io.swagger.v3.oas.annotations.responses.ApiResponse
 import io.swagger.v3.oas.annotations.tags.Tag
+import org.springframework.data.domain.Page
 import com.danielqueiroz.libraryshop.api.data.vo.v2.PersonVO as PersonVOV2
 import org.springframework.http.ResponseEntity
 import org.springframework.web.bind.annotation.*
@@ -73,7 +74,9 @@ interface PersonControllerOpenAPI {
             ),
         ]
     )
-    fun getPersons(): List<PersonVO>
+    fun getPersons(@RequestParam(value = "page", defaultValue = "0") page: Int,
+                   @RequestParam(value = "limit", defaultValue = "12") limit: Int
+                   ): ResponseEntity<Page<PersonVO>>
 
     @Operation(
         summary = "Adds a new Person", description = "Adds a new Person",

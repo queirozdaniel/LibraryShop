@@ -5,6 +5,9 @@ import com.danielqueiroz.libraryshop.api.data.vo.v1.PersonVO
 import com.danielqueiroz.libraryshop.api.openapi.PersonControllerOpenAPI
 import com.danielqueiroz.libraryshop.api.data.vo.v2.PersonVO as PersonVOV2
 import com.danielqueiroz.libraryshop.domain.service.PersonService
+import org.springframework.data.domain.Page
+import org.springframework.data.domain.PageRequest
+import org.springframework.data.domain.Pageable
 import org.springframework.http.ResponseEntity
 import org.springframework.web.bind.annotation.*
 
@@ -20,8 +23,11 @@ class PersonController(
     }
 
     @GetMapping("/v1",produces = [MediaType.APPLICATION_JSON,MediaType.APPLICATION_XML, MediaType.APPLICATION_YAML])
-    override fun getPersons(): List<PersonVO> {
-        return personService.findAll()
+    override fun getPersons(@RequestParam(value = "page", defaultValue = "0") page: Int,
+                            @RequestParam(value = "limit", defaultValue = "12") limit: Int): ResponseEntity<Page<PersonVO>> {
+
+        val pageable: Pageable = PageRequest.of(page, limit)
+        return ResponseEntity.ok(personService.findAll(pageable))
     }
 
     @PostMapping("/v1",produces = [MediaType.APPLICATION_JSON,MediaType.APPLICATION_XML,MediaType.APPLICATION_YAML], consumes = [MediaType.APPLICATION_JSON])

@@ -10,6 +10,8 @@ import com.danielqueiroz.libraryshop.domain.model.Person
 import com.danielqueiroz.libraryshop.domain.repository.PersonRepository
 import com.danielqueiroz.libraryshop.domain.service.PersonService
 import org.springframework.beans.factory.annotation.Autowired
+import org.springframework.data.domain.Page
+import org.springframework.data.domain.Pageable
 import org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.linkTo
 import org.springframework.stereotype.Service
 import org.springframework.transaction.annotation.Transactional
@@ -39,10 +41,10 @@ class PersonServiceImpl : PersonService {
         return personVO
     }
 
-    override fun findAll(): List<PersonVO> {
+    override fun findAll(pageable: Pageable): Page<PersonVO> {
         logger.info("Finding all persons")
-        val persons = repository.findAll()
-        val vos = DozerMapper.parseListObjects(persons, PersonVO::class.java)
+        val persons = repository.findAll(pageable)
+        val vos = persons.map { p -> DozerMapper.parseObject(p, PersonVO::class.java) }
         vos.forEach { it.add(linkTo(PersonController::class.java).slash(it.idValue).withSelfRel()) }
         return vos
     }
