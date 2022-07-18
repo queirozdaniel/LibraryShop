@@ -2,7 +2,6 @@ package com.danielqueiroz.libraryshop.domain.service.impl
 
 import com.danielqueiroz.libraryshop.api.controller.PersonController
 import com.danielqueiroz.libraryshop.api.data.vo.v1.PersonVO
-import com.danielqueiroz.libraryshop.api.data.vo.v2.PersonVO as PersonVOV2
 import com.danielqueiroz.libraryshop.api.exception.ResourceNotFoundException
 import com.danielqueiroz.libraryshop.api.mapper.DozerMapper
 import com.danielqueiroz.libraryshop.api.mapper.custom.PersonMapper
@@ -10,12 +9,15 @@ import com.danielqueiroz.libraryshop.domain.model.Person
 import com.danielqueiroz.libraryshop.domain.repository.PersonRepository
 import com.danielqueiroz.libraryshop.domain.service.PersonService
 import org.springframework.beans.factory.annotation.Autowired
-import org.springframework.data.domain.Page
 import org.springframework.data.domain.Pageable
+import org.springframework.data.web.PagedResourcesAssembler
+import org.springframework.hateoas.EntityModel
+import org.springframework.hateoas.PagedModel
 import org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.linkTo
 import org.springframework.stereotype.Service
 import org.springframework.transaction.annotation.Transactional
 import java.util.logging.Logger
+import com.danielqueiroz.libraryshop.api.data.vo.v2.PersonVO as PersonVOV2
 
 @Service
 class PersonServiceImpl : PersonService {
@@ -25,6 +27,9 @@ class PersonServiceImpl : PersonService {
 
     @Autowired
     private lateinit var mapperV2: PersonMapper
+
+    @Autowired
+    private lateinit var assembler: PagedResourcesAssembler<PersonVO>
 
     private val logger = Logger.getLogger(PersonServiceImpl::class.java.name)
 
@@ -41,12 +46,12 @@ class PersonServiceImpl : PersonService {
         return personVO
     }
 
-    override fun findAll(pageable: Pageable): Page<PersonVO> {
+    override fun findAll(pageable: Pageable): PagedModel<EntityModel<PersonVO>> {
         logger.info("Finding all persons")
         val persons = repository.findAll(pageable)
         val vos = persons.map { p -> DozerMapper.parseObject(p, PersonVO::class.java) }
         vos.forEach { it.add(linkTo(PersonController::class.java).slash(it.idValue).withSelfRel()) }
-        return vos
+        return assembler.toModel(vos)
     }
 
     override fun create(person: PersonVO): PersonVO {
